@@ -1,0 +1,50 @@
+﻿@using Zavrsni.Model
+@model KreirajPregledModel
+@{
+    ViewBag.Title = "Zatraži pregled";
+}
+
+<h2>Request an Appointment</h2>
+
+@using (Html.BeginForm("KreirajPregled", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Pregled.DoktorID, "Odaberite doktora", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <select asp-for="Pregled.DoktorID" asp-items="ViewBag.Doktori" class="form-control"></select>
+            @Html.ValidationMessageFor(m => m.Pregled.DoktorID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.DatumPregleda, "Appointment Date", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.DatumPregleda, "{0:dd.MM.yyyy}", new { @class = "form-control", type = "date" })
+            @Html.ValidationMessageFor(m => m.DatumPregleda, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    
+    
+    <div class="form-group">
+        @Html.LabelFor(m => m.VrijemePregleda, "Vrijeme pregleda", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.VrijemePregleda, "{0:hh\\:mm}", new { @class = "form-control", type = "time" })
+            @Html.ValidationMessageFor(m => m.VrijemePregleda, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Pregled.Napomena, "Napomena doktoru", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(m => m.Pregled.Napomena, new { @class = "form-control", rows = 5 })
+            @Html.ValidationMessageFor(m => m.Pregled.Napomena, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Zatraži pregled" class="btn btn-primary" />
+        </div>
+    </div>
+}

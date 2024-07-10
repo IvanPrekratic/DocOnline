@@ -1,20 +1,12 @@
-﻿namespace Zavrsni.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Zavrsni.Model
 {
-    public enum Specijalizacija
+    public class Specijalizacija
     {
-        OpcaPraksa,
-        Kardiologija,
-        Dermatologija,
-        Ginekologija,
-        InternaMedicina,
-        Neurologija,
-        Oftalmologija,
-        Ortopedija,
-        Otorinolaringologija,
-        Pedijatrija,
-        Psihijatrija,
-        Radiologija,
-        Stomatologija,
-        Urologija
+        [Key]
+        public int SpecijalizacijaID { get; set; }
+        [Required]
+        public string Naziv { get; set; }
     }
 }
