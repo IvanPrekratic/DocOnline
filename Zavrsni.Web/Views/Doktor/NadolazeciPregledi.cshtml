@@ -1,0 +1,43 @@
+﻿@using Zavrsni.Model
+@model List<Pregled>
+@{
+    ViewBag.Title = "Nadolazeći pregledi";
+}
+
+
+<table style="margin-top: 20px;" class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Pacijent</th>
+            <th>Termin</th>
+            <th>Kontakt broj</th>
+            <th>Potvrđen</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pregled in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="Doktor" asp-action="DetailsDoktor" asp-route-id="@pregled.Pacijent.ImePrezime">@pregled.Pacijent.ImePrezime</a>
+                </td>
+                <td>@pregled.DatumIVrijemePregleda</td>
+                <td>@pregled.Pacijent.Telefon</td>
+                @{
+                    if (@pregled.Potvrdeno == true)
+                    {
+                        <td>Potvrđeno</td>
+                    } else
+                    {
+                        <td>Nije potvrđeno</td>
+                    }
+                }
+                
+                <td>
+                    <a asp-controller="Doktor" asp-action="DetailsDoktor" asp-route-id="@pregled.Potvrdeno">Detalji</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

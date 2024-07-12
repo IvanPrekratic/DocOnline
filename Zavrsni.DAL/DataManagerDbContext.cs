@@ -38,6 +38,5 @@ namespace Zavrsni.DAL
             modelBuilder.Entity<Specijalizacija>().HasData(new Specijalizacija { SpecijalizacijaID = 13, Naziv = "Stomatologija" });
             modelBuilder.Entity<Specijalizacija>().HasData(new Specijalizacija { SpecijalizacijaID = 14, Naziv = "Urologija" });
         }
-
     }
 }

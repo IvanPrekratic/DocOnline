@@ -1,24 +1,47 @@
 ﻿using System.Net.Mail;
 using System.Net;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace Zavrsni.Web.Util
 {
     public class EmailConfirmation
     {
+        /*
         public static IConfiguration _config;
         public EmailConfirmation(IConfiguration config)
         {
             _config = config;
         }
-        public static bool SendEmail(string SenderEmail, string Subject, string Message, bool IsBodyHtml = false)
+        */
+
+
+        public async Task<Task> SendEmail(string Email, string Subject, string HtmlMessage)
+        {
+            var emailtosend = new MimeMessage();
+            emailtosend.From.Add(MailboxAddress.Parse("doc.online.hr@gmail.com"));
+            emailtosend.To.Add(MailboxAddress.Parse(Email));
+            emailtosend.Subject = Subject;
+            emailtosend.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = HtmlMessage };
+            using (var smtp = new MailKit.Net.Smtp.SmtpClient())
+            {
+                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate("doc.online.hr@gmail.com", "daphtcaudsgcttdt");
+                smtp.Send(emailtosend);
+                smtp.Disconnect(true);
+            }
+            return Task.CompletedTask;
+        }
+        /*
+        public static bool SendEmailStari(string SenderEmail, string Subject, string Message, bool IsBodyHtml = false)
         {
             bool status = false;
             try
             {
-                string HostAddress = _config.GetValue<string>("MailSettings:Host");
-                string FormEmailId = _config.GetValue<string>("MailSettings:MailFrom");
-                string Password = _config.GetValue<string>("MailSettings:Password");
-                string Port = _config.GetValue<string>("MailSettings:Port");
+                string HostAddress = "smtp.gmail.com";
+                string FormEmailId = "doc.online.hr@gmail.com";
+                string Password = "DocOnline21";
+                string Port = "587";
                 MailMessage mailMessage = new MailMessage();
                 mailMessage.From = new MailAddress(FormEmailId);
                 mailMessage.Subject = Subject;
@@ -43,5 +66,6 @@ namespace Zavrsni.Web.Util
                 return status;
             }
         }
+        */
     }
 }

@@ -26,7 +26,7 @@ using Zavrsni.Web.Util;
 
 namespace Zavrsni.Web.Areas.Identity.Pages.Account
 {
-    public class RegisterModel : PageModel
+    public class DoktorRegister : PageModel
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
@@ -35,14 +35,16 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly DataManagerDbContext _dbContext;
+        private readonly IUrlHelper _urlHelper;
 
-        public RegisterModel(
+        public DoktorRegister(
             UserManager<AppUser> userManager,
             IUserStore<AppUser> userStore,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            DataManagerDbContext dbContext)
+            DataManagerDbContext _dbContext,
+            IUrlHelper urlHelper)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,9 +52,9 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _dbContext = dbContext;
+            this._dbContext = _dbContext;
+            _urlHelper = urlHelper;
         }
-
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -191,7 +193,7 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
                     body = body.Replace("{ConfirmationLink}", callbackUrl);
                     body = body.Replace("{UserName}", user.UserName);
                     /*
-                    bool IsSendEmail = EmailConfirmation.SendEmailStari(user.Email, "Confirm your account", body, true);
+                    bool IsSendEmail = EmailConfirmation.SendEmail(user.Email, "Confirm your account", body, true);
                     if (IsSendEmail)
                         return RedirectToAction("Login", "Account");
                     */
@@ -217,93 +219,96 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            
+
 
             // If we got this far, something failed, redisplay form
             return Page();
         }
 
-        /*
-		public async Task<IActionResult> KreirajNovogDoktora(Doktor doktor, DoktorKreiranje model, string returnUrl = null, string requestScheme = null)
-		{
-			returnUrl ??= Url.Content("~/");
-			ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-			if (ModelState.IsValid)
-			{
-				var user = CreateUser();
 
-				
-				_dbContext.Doktori.Add(doktor);
-				_dbContext.SaveChanges();
-				var doktorID = _dbContext.Doktori.Where(dok => dok.KorisnickoIme == doktor.KorisnickoIme).FirstOrDefault().DoktorID;
-				user.Doktor = doktor;
+        public async Task<IActionResult> KreirajNovogDoktora(Doktor doktor, DoktorKreiranje model, string returnUrl = null, string requestScheme = null)
+        {
+            returnUrl ??= Url.Content("~/");
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            if (ModelState.IsValid)
+            {
+                var user = CreateUser();
+
+
+                _dbContext.Doktori.Add(doktor);
+                _dbContext.SaveChanges();
+                var doktorID = _dbContext.Doktori.Where(dok => dok.KorisnickoIme == doktor.KorisnickoIme).FirstOrDefault().DoktorID;
+                user.Doktor = doktor;
                 user.DoktorID = doktorID;
-				user.UserType = UserType.Doktor;
+                user.UserType = UserType.Doktor;
 
 
 
-				await _userStore.SetUserNameAsync(user, user.Doktor.KorisnickoIme, CancellationToken.None);
-				await _emailStore.SetEmailAsync(user, user.Doktor.Email, CancellationToken.None);
-				var result = await _userManager.CreateAsync(user, model.Password);
+                await _userStore.SetUserNameAsync(user, user.Doktor.KorisnickoIme, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, user.Doktor.Email, CancellationToken.None);
+                var result = await _userManager.CreateAsync(user, model.Password);
 
-				if (result.Succeeded)
-				{
-					_logger.LogInformation("User created a new account with password.");
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User created a new account with password.");
 
-					var userId = await _userManager.GetUserIdAsync(user);
-					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-					code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    user.EmailConfirmed = true;
+                    var userId = await _userManager.GetUserIdAsync(user);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     
+
                     var callbackUrl = _urlHelper.Page(
-						"/Account/ConfirmEmail",
-						pageHandler: null,
-						values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-						protocol: requestScheme);
-                    
+                        "/Account/ConfirmEmail",
+                        pageHandler: null,
+                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                        protocol: requestScheme);
+
 
 
 
                     string body = string.Empty;
-					using (StreamReader reader = new StreamReader("MailTemplate/AccountConfirmation.html"))
-					{
-						body = reader.ReadToEnd();
-					}
-					body = body.Replace("{ConfirmationLink}", callbackUrl);
-					body = body.Replace("{UserName}", user.UserName);
-					bool IsSendEmail = EmailConfirmation.SendEmail(user.Email, "Confirm your account", body, true);
-					if (IsSendEmail)
-						return RedirectToAction("Login", "Account");
+                    using (StreamReader reader = new StreamReader("MailTemplate/AccountConfirmation.html"))
+                    {
+                        body = reader.ReadToEnd();
+                    }
+                    body = body.Replace("{ConfirmationLink}", callbackUrl);
+                    body = body.Replace("{UserName}", user.UserName);
+                    EmailConfirmation emailConfirmation = new EmailConfirmation();
+                    await emailConfirmation.SendEmail(user.Email, "Confirm your account", body);
 
-                    
-					//await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-					//$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-					if (_userManager.Options.SignIn.RequireConfirmedAccount)
-					{
-						return RedirectToPage("RegisterConfirmation", new { email = user.Doktor.Email, returnUrl = returnUrl });
-					}
-					else
-					{
-						await _signInManager.SignInAsync(user, isPersistent: false);
-						return LocalRedirect(returnUrl);
-					}
-				}
-				_dbContext.Doktori.Remove(_dbContext.Doktori.Where(dok => dok.KorisnickoIme == doktor.KorisnickoIme).FirstOrDefault());
-				_dbContext.SaveChanges();
-				foreach (var error in result.Errors)
-				{
-					ModelState.AddModelError(string.Empty, error.Description);
-				}
-			}
+                    //bool IsSendEmail = EmailConfirmation.SendEmail(user.Email, "Confirm your account", body, true);
+                    //if (IsSendEmail)
+                        //return RedirectToAction("Login", "Account");
 
 
-			// If we got this far, something failed, redisplay form
-			return Page();
-		}
-        */
+                    await _emailSender.SendEmailAsync(user.Doktor.Email, "Confirm your email",
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-		private AppUser CreateUser()
+                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    {
+                        //return RedirectToPage("RegisterConfirmation", new { email = user.Doktor.Email, returnUrl = returnUrl });
+                        return RedirectToPage("/Identity/Account/RegisterConfirmation", new { email = user.Doktor.Email, returnUrl = returnUrl });
+                    }
+                    else
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+                _dbContext.Doktori.Remove(_dbContext.Doktori.Where(dok => dok.KorisnickoIme == doktor.KorisnickoIme).FirstOrDefault());
+                _dbContext.SaveChanges();
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+
+            // If we got this far, something failed, redisplay form
+            return Page();
+        }
+
+        private AppUser CreateUser()
         {
             try
             {
