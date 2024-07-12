@@ -32,7 +32,6 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<AppUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly DataManagerDbContext _dbContext;
 
         public RegisterModel(
             UserManager<AppUser> userManager,
