@@ -1,0 +1,89 @@
+﻿@using Zavrsni.Model
+@model Pregled
+@{
+    ViewBag.Title = "Detalji o pregledu";
+}
+<h2>Detalji o pregledu</h2>
+<hr />
+@if (Model != null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Ime i prezime doktora
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Doktor.ImePrezime)
+                    </dd>
+                    <dt>
+                        Email doktora
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Doktor.Email)
+                    </dd>
+                    <dt>
+                        Kontakt broj
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Doktor.Telefon)
+                    </dd>
+                    <dt>
+                        Adresa doktora
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Doktor.Adresa), @Html.DisplayFor(model => model.Doktor.Grad)
+                    </dd>
+                </dl>
+
+            </div>
+            <div class="col-8">
+                <h4>Datum i vrijeme pregleda: </h4>
+                <p style="font-size: 20px">
+                    @Html.DisplayFor(model => model.DatumIVrijemePregleda)
+                </p>
+                <h4>Napomena pacijenta:</h4>
+                <p style="font-size: 20px">
+                    @Html.DisplayFor(model => model.Napomena)
+                </p>
+                <h4>Potvrđeno: </h4>
+                <p style="font-size: 20px">
+                    @if (Model.Potvrdeno == true)
+                    {
+                        <span class="text-success">Potvrđeno</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Nije potvrđeno</span>
+                       
+                    }
+                </p>
+                @if (Model.Potvrdeno == true)
+                {
+                    <a href="" onclick="redirect()">Pristupi videopozivu</a>
+                }
+
+
+            </div>
+        </div>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-danger">
+        Nije odabran ispravni ID recenzije.
+    </div>
+
+}
+<script>
+    function redirect() {
+        event.preventDefault();
+        var IconHtml = "@Html.Raw(Model.UrlVideopoziva)"
+        console.log(IconHtml)
+        var callUrl = 'https://doc-online.daily.co/' + IconHtml;
+        window.open(callUrl, '_blank');
+    }
+</script>

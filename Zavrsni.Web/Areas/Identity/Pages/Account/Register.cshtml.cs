@@ -190,15 +190,8 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
                     }
                     body = body.Replace("{ConfirmationLink}", callbackUrl);
                     body = body.Replace("{UserName}", user.UserName);
-                    /*
-                    bool IsSendEmail = EmailConfirmation.SendEmailStari(user.Email, "Confirm your account", body, true);
-                    if (IsSendEmail)
-                        return RedirectToAction("Login", "Account");
-                    */
-
-
-                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    //$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    EmailConfirmation emailConfirmation = new EmailConfirmation();
+                    await emailConfirmation.SendEmail(user.Email, "Confirm your account", body);
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

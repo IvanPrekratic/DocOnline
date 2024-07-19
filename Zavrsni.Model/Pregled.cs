@@ -24,5 +24,6 @@ namespace Zavrsni.Model
         public int DoktorID { get; set; }
         public Doktor Doktor { get; set; }
         public bool Potvrdeno { get; set; }
+        public string UrlVideopoziva { get; set; }
     }
 }

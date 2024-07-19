@@ -1,14 +1,14 @@
 ﻿@using Zavrsni.Model
 @model List<Pregled>
 @{
-    ViewBag.Title = "Nadolazeći pregledi";
+    ViewBag.Title = "Moji pregledi";
 }
 
 
 <table style="margin-top: 20px;" class="table table-condensed">
     <thead>
         <tr>
-            <th>Pacijent</th>
+            <th>Doktor</th>
             <th>Termin</th>
             <th>Kontakt broj</th>
             <th>Potvrđen</th>
@@ -20,22 +20,23 @@
         {
             <tr>
                 <td>
-                    <a asp-controller="Doktor" asp-action="AboutUser" asp-route-id="@pregled.Pacijent.PacijentID">@pregled.Pacijent.ImePrezime</a>
+                    <a asp-controller="Home" asp-action="AboutDoktor" asp-route-id="@pregled.DoktorID">@pregled.Doktor.ImePrezime</a>
                 </td>
                 <td>@pregled.DatumIVrijemePregleda</td>
-                <td>@pregled.Pacijent.Telefon</td>
+                <td>@pregled.Doktor.Telefon</td>
                 @{
                     if (@pregled.Potvrdeno == true)
                     {
                         <td>Potvrđeno</td>
-                    } else
+                    }
+                    else
                     {
                         <td>Nije potvrđeno</td>
                     }
                 }
-                
+
                 <td>
-                    <a asp-controller="Doktor" asp-action="DetaljiOPregleduDoktor" asp-route-id="@pregled.PregledID">Detalji</a>
+                    <a asp-controller="Home" asp-action="DetaljiOPregledu" asp-route-id="@pregled.PregledID">Detalji</a>
                 </td>
             </tr>
         }

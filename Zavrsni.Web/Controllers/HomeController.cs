@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,33 +10,12 @@ using Zavrsni.Web.Models;
 
 namespace Zavrsni.Web.Controllers
 {
+    [Authorize(Policy = "RequireUserTypePacijent")]
     public class HomeController(DataManagerDbContext _dbContext, UserManager<AppUser> _userManager) : Controller
     {
 
         public IActionResult Index()
         {
-            /*
-            Doktor noviDoktor = new Doktor
-            {
-                Ime = "Ivan",
-                Prezime = "Ivanovic",
-                SpecijalizacijaID = 1,
-                Email = "ivanovici@gmail.com",
-                Telefon = "061/123-456",
-                Adresa = "Ulica 1",
-                Grad = "Sarajevo",
-                Drzava = "Bosna i Hercegovina",
-                JMBG = "1234567890123",
-                KorisnickoIme = "ivanovici",
-                Titula = "Doktor",
-                PocetakRadnogVremena = "08:00",
-                KrajRadnogVremena = "16:00"
-            };
-            _dbContext.Doktori.Add(noviDoktor);
-            _dbContext.SaveChanges();
-            */
-
-
             return View();
         }
 
@@ -68,7 +48,8 @@ namespace Zavrsni.Web.Controllers
                 Napomena = model.Pregled.Napomena,
                 PacijentID = model.Pregled.PacijentID,
                 DoktorID = model.Pregled.DoktorID,
-                Potvrdeno = false
+                Potvrdeno = false,
+                UrlVideopoziva = ""
             };
             ViewBag.Doktori = VratiDoktore();
             var user = await _userManager.GetUserAsync(User);
@@ -84,6 +65,23 @@ namespace Zavrsni.Web.Controllers
             }
 
             return View(model);
+        }
+
+        [Route("mojiPregledi")]
+        [ActionName("MojiPregledi")]
+        public async Task<IActionResult> MojiPreglediAsync()
+        {
+            var pacijent = await _userManager.GetUserAsync(User);
+            var pregledi = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).Where(p => p.PacijentID == pacijent.PacijentID).ToList();
+            return View(pregledi);
+        }
+
+
+        [Route("pregledDetalji/{id}")]
+        public IActionResult DetaljiOPregledu(int id)
+        {
+            var pregled = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).FirstOrDefault(p => p.PregledID == id);
+            return View(pregled);
         }
 
 
