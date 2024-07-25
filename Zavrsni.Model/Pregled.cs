@@ -14,6 +14,7 @@ namespace Zavrsni.Model
         public int PregledID { get; set; }
         [Required]
         public DateTime DatumIVrijemePregleda { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Napomena { get; set; }
         [Required]
         [ForeignKey(nameof(Pacijent))]
@@ -25,5 +26,6 @@ namespace Zavrsni.Model
         public Doktor Doktor { get; set; }
         public bool Potvrdeno { get; set; }
         public string UrlVideopoziva { get; set; }
+        public string BiljeskeDoktora { get; set; }
     }
 }

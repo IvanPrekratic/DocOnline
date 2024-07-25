@@ -36,6 +36,11 @@
                         @Html.DisplayFor(model => model.Doktor.Adresa), @Html.DisplayFor(model => model.Doktor.Grad)
                     </dd>
                 </dl>
+                <!--Otkaži pregled-->
+                <form asp-action="OtkaziPregled" method="post">
+                    <input type="hidden" name="PregledID" value="@Model.PregledID" />
+                    <input type="submit" value="Otkaži pregled" class="btn btn-outline-danger" />
+                </form>
 
             </div>
             <div class="col-8">
@@ -61,7 +66,7 @@
                 </p>
                 @if (Model.Potvrdeno == true)
                 {
-                    <a href="" onclick="redirect()">Pristupi videopozivu</a>
+                    <button onclick="redirect()" class="btn btn-info">Pristupi videopozivu</button>
                 }
 
 

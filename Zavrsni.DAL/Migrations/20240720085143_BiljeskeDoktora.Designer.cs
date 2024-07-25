@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Zavrsni.DAL;
 
@@ -11,9 +12,11 @@ using Zavrsni.DAL;
 namespace Zavrsni.DAL.Migrations
 {
     [DbContext(typeof(DataManagerDbContext))]
-    partial class DataManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240720085143_BiljeskeDoktora")]
+    partial class BiljeskeDoktora
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

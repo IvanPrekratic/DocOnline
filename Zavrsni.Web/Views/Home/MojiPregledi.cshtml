@@ -18,27 +18,54 @@
     <tbody>
         @foreach (var pregled in Model)
         {
-            <tr>
-                <td>
-                    <a asp-controller="Home" asp-action="AboutDoktor" asp-route-id="@pregled.DoktorID">@pregled.Doktor.ImePrezime</a>
-                </td>
-                <td>@pregled.DatumIVrijemePregleda</td>
-                <td>@pregled.Doktor.Telefon</td>
-                @{
-                    if (@pregled.Potvrdeno == true)
-                    {
-                        <td>Potvrđeno</td>
+            if (DateTime.Compare(pregled.DatumIVrijemePregleda, DateTime.Now) <= 0)
+            {
+                <tr class ="table-active">
+                    <td>
+                        <a asp-controller="Home" asp-action="AboutDoktor" asp-route-id="@pregled.DoktorID">@pregled.Doktor.ImePrezime</a>
+                    </td>
+                    <td>@pregled.DatumIVrijemePregleda</td>
+                    <td>@pregled.Doktor.Telefon</td>
+                    @{
+                        if (@pregled.Potvrdeno == true)
+                        {
+                            <td>Potvrđeno</td>
+                        }
+                        else
+                        {
+                            <td>Nije potvrđeno</td>
+                        }
                     }
-                    else
-                    {
-                        <td>Nije potvrđeno</td>
-                    }
-                }
 
-                <td>
-                    <a asp-controller="Home" asp-action="DetaljiOPregledu" asp-route-id="@pregled.PregledID">Detalji</a>
-                </td>
-            </tr>
+                    <td>
+                        <a asp-controller="Home" asp-action="DetaljiOPregledu" asp-route-id="@pregled.PregledID">Detalji</a>
+                    </td>
+                </tr>
+            } else
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Home" asp-action="AboutDoktor" asp-route-id="@pregled.DoktorID">@pregled.Doktor.ImePrezime</a>
+                    </td>
+                    <td>@pregled.DatumIVrijemePregleda</td>
+                    <td>@pregled.Doktor.Telefon</td>
+                    @{
+                        if (@pregled.Potvrdeno == true)
+                        {
+                            <td>Potvrđeno</td>
+                        }
+                        else
+                        {
+                            <td>Nije potvrđeno</td>
+                        }
+                    }
+
+                    <td>
+                        <a asp-controller="Home" asp-action="DetaljiOPregledu" asp-route-id="@pregled.PregledID">Detalji</a>
+                    </td>
+                </tr>
+            }
+            
         }
     </tbody>
 </table>

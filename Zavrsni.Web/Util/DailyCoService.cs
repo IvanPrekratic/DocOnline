@@ -30,7 +30,7 @@ namespace Zavrsni.Web.Util
                     start_audio_off = true,
                     start_video_off = true,
                     enable_chat = true,
-                    nbf = new DateTimeOffset(startTime.AddMinutes(-15)).ToUnixTimeMilliseconds(),
+                    nbf = new DateTimeOffset(startTime.AddMinutes(-15)).ToUnixTimeSeconds(),
                     exp = new DateTimeOffset(startTime.AddHours(1.5)).ToUnixTimeSeconds(),
 
                 }

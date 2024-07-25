@@ -85,8 +85,8 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
+            [EmailAddress(ErrorMessage = "Nevažeća email adresa")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
@@ -94,10 +94,10 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
+            [StringLength(100, ErrorMessage = "Lozinka mora biti između {2} i {1} znakova.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Lozinka")]
             public string Password { get; set; }
 
             /// <summary>
@@ -105,27 +105,27 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Potvrdi lozinku")]
+            [Compare("Password", ErrorMessage = "Upisane lozinke nisu jednake.")]
             public string ConfirmPassword { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Ime { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Prezime { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Telefon { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Adresa { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Grad { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Drzava { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string JMBG { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string KorisnickoIme { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public DateTime DatumRodjenja { get; set; }
         }
 
@@ -184,11 +184,11 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
                     body = body.Replace("{ConfirmationLink}", callbackUrl);
                     body = body.Replace("{UserName}", user.UserName);
                     EmailConfirmation emailConfirmation = new EmailConfirmation();
-                    await emailConfirmation.SendEmail(user.Email, "Confirm your account", body);
+                    await emailConfirmation.SendEmail(user.Email, "Potvrdite svoj mail", body);
+                    
+                    return Redirect("/confirmEmail");
 
-                    //await _emailSender.SendEmailAsync(user.Doktor.Email, "Confirm your email",
-                    //$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                    /*
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         //return RedirectToPage("RegisterConfirmation", new { email = user.Doktor.Email, returnUrl = returnUrl });
@@ -198,7 +198,7 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
-                    }
+                    }*/
                 }
                 _dbContext.Doktori.Remove(_dbContext.Doktori.Where(dok => dok.KorisnickoIme == doktor.KorisnickoIme).FirstOrDefault());
                 _dbContext.SaveChanges();

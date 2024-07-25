@@ -11,25 +11,26 @@ namespace Zavrsni.Model
     {
         [Key]
         public int PacijentID { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Ime { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Prezime { get; set; }
-        [Required]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Telefon { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Adresa { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Grad { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Drzava { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string JMBG { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string KorisnickoIme { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public DateTime DatumRodjenja { get; set; }
         public virtual ICollection<Doktor>? Doktori { get; set; }
         public string ImePrezime => $"{Ime} {Prezime}";

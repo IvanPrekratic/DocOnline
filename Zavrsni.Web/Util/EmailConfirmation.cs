@@ -7,15 +7,6 @@ namespace Zavrsni.Web.Util
 {
     public class EmailConfirmation
     {
-        /*
-        public static IConfiguration _config;
-        public EmailConfirmation(IConfiguration config)
-        {
-            _config = config;
-        }
-        */
-
-
         public async Task<Task> SendEmail(string Email, string Subject, string HtmlMessage)
         {
             var emailtosend = new MimeMessage();
@@ -32,40 +23,5 @@ namespace Zavrsni.Web.Util
             }
             return Task.CompletedTask;
         }
-        /*
-        public static bool SendEmailStari(string SenderEmail, string Subject, string Message, bool IsBodyHtml = false)
-        {
-            bool status = false;
-            try
-            {
-                string HostAddress = "smtp.gmail.com";
-                string FormEmailId = "doc.online.hr@gmail.com";
-                string Password = "DocOnline21";
-                string Port = "587";
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress(FormEmailId);
-                mailMessage.Subject = Subject;
-                mailMessage.Body = Message;
-                mailMessage.IsBodyHtml = IsBodyHtml;
-                mailMessage.To.Add(new MailAddress(SenderEmail));
-                SmtpClient smtp = new SmtpClient();
-                smtp.Host = HostAddress;
-                smtp.EnableSsl = true;
-                NetworkCredential networkCredential = new NetworkCredential();
-                networkCredential.UserName = mailMessage.From.Address;
-                networkCredential.Password = Password;
-                smtp.UseDefaultCredentials = true;
-                smtp.Credentials = networkCredential;
-                smtp.Port = Convert.ToInt32(Port);
-                smtp.Send(mailMessage);
-                status = true;
-                return status;
-            }
-            catch (Exception e)
-            {
-                return status;
-            }
-        }
-        */
     }
 }

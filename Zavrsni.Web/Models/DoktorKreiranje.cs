@@ -7,42 +7,44 @@ namespace Zavrsni.Web.Models
 	public class DoktorKreiranje
 	{
         [Key]
-		public int DoktorID { get; set; }
-        [Required]
-		public string Ime { get; set; }
-		[Required]
-		public string Prezime { get; set; }
-		[Required]
-		[ForeignKey(nameof(Specijalizacija))]
-		public int SpecijalizacijaID { get; set; }
-		public Specijalizacija Specijalizacija { get; set; }
-		[Required]
-		public string Email { get; set; }
-		[Required]
-		public string Telefon { get; set; }
-		[Required]
-		public string Adresa { get; set; }
-		[Required]
-		public string Grad { get; set; }
-		[Required]
-		public string Drzava { get; set; }
-		[Required]
-		public string JMBG { get; set; }
-		[Required]
-		public string KorisnickoIme { get; set; }
-		[Required]
-		public string Titula { get; set; }
-		[Required]
-		public string PocetakRadnogVremena { get; set; }
-		[Required]
-		public string KrajRadnogVremena { get; set; }
-		public virtual ICollection<Pacijent>? Pacijenti { get; set; }
-		public string ImePrezime => $"{Ime} {Prezime}";
-        [Required]
+        public int DoktorID { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string Ime { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string Prezime { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        [ForeignKey(nameof(Specijalizacija))]
+        public int SpecijalizacijaID { get; set; }
+        public Specijalizacija Specijalizacija { get; set; }
+        [EmailAddress(ErrorMessage = "Nevažeća email adresa")]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string Telefon { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string Adresa { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string Grad { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string Drzava { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string JMBG { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string KorisnickoIme { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string Titula { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string PocetakRadnogVremena { get; set; }
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
+        public string KrajRadnogVremena { get; set; }
+        public virtual ICollection<Pacijent>? Pacijenti { get; set; }
+        public string ImePrezime => $"{Ime} {Prezime}";
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        [Required]
+
         [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Upisane lozinke nisu jednake.")]
         public string PasswordConfirm { get; set; }
     }
 }

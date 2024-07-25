@@ -7,7 +7,7 @@
 <hr />
 @if (Model != null)
 {
-    <div class="container">
+    <div class="container" style="padding-bottom: 60px">
         <div class="row">
             <div class="col-4">
                 <dl class="dl-horizontal">
@@ -36,7 +36,23 @@
                         @Html.DisplayFor(model => model.Pacijent.Adresa), @Html.DisplayFor(model => model.Pacijent.Grad)
                     </dd>
                 </dl>
-
+                <!--Slanje emaila pacijentu pomoću textarea i buttona-->
+                @{
+                    var emailModel = new DoktorEmailModel
+                {
+                    PacijentID = Model.PacijentID,
+                    DoktorID = Model.DoktorID,
+                    PregledID = Model.PregledID
+                };
+                }
+                <form asp-action="PosaljiEmail" method="post">
+                    <input type="hidden" name="PacijentID" value="@emailModel.PacijentID" />
+                    <input type="hidden" name="DoktorID" value="@emailModel.DoktorID" />
+                    <input type="hidden" name="PregledID" value="@emailModel.PregledID" />
+                    <label class="control-label">Pošalji mail pacijentu:</label>
+                    <textarea rows="4" cols="50" name="EmailPoruka" class="form-control"></textarea>
+                    <input type="submit" value="Pošalji" class="btn btn-outline-success" />
+                </form>
             </div>
             <div class="col-8">
                 <h4>Datum i vrijeme pregleda: </h4>
@@ -64,7 +80,37 @@
                 </p>
                 @if (Model.Potvrdeno == true)
                 {
-                    <a href="" onclick="redirect()">Pristupi videopozivu</a>
+                    <button onclick="redirect()" class="btn btn-info">Pristupi videopozivu</button>
+                }
+
+
+
+                @if (Model.Potvrdeno == true && Model.BiljeskeDoktora == "")
+                {
+                    <button onclick="show()" id="gumb" class="btn btn-info">Dodaj bilješke</button>
+                    <div id="zabiljesku" style="display:none;">
+                        <form asp-action="DodajBiljesku" method="post">
+                            <input type="hidden" asp-for="PregledID" />
+                            <label class="control-label">Bilješke doktora:</label>
+                            <textarea rows="4" cols="50" asp-for="BiljeskeDoktora" class="form-control"></textarea>
+                            <input type="submit" value="Spremi" class="btn btn-outline-success" />
+                        </form>
+                    </div>
+
+                }
+                else if (Model.BiljeskeDoktora != null)
+                {
+                    <h4>Bilješke doktora:</h4>
+                    <p style="font-size: 20px" id="pbiljeska">
+                        @Html.DisplayFor(model => model.BiljeskeDoktora)
+                    </p>
+                    <button onclick="showEdit()" id="gumb1" class="btn btn-info">Uredi bilješke</button>
+                    <form asp-action="UrediBiljesku" method="post" style="display: none;" id="formEdit">
+                        <input type="hidden" asp-for="PregledID" />
+                        <label class="control-label">Bilješke doktora:</label>
+                        <textarea rows="4" cols="50" asp-for="BiljeskeDoktora" class="form-control"></textarea>
+                        <input type="submit" value="Spremi" class="btn btn-outline-success" />
+                    </form>
                 }
             </div>
         </div>
@@ -86,5 +132,22 @@ else
         console.log(IconHtml)
         var callUrl = 'https://doc-online.daily.co/' + IconHtml;
         window.open(callUrl, '_blank');
+    }
+    function show() {
+        var button = document.getElementById("gumb");
+        var zabiljesku = document.getElementById("zabiljesku");
+        if (zabiljesku.style.display === "none") {
+            zabiljesku.style.display = "block";
+        }
+        else {
+            zabiljesku.style.display = "none";
+        }
+    }
+    function showEdit() {
+        var button = document.getElementById("gumb1");
+        var pbiljeska = document.getElementById("pbiljeska");
+        var formEdit = document.getElementById("formEdit");
+        pbiljeska.style.display = "none";
+        formEdit.style.display = "block";
     }
 </script>

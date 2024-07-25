@@ -12,33 +12,34 @@ namespace Zavrsni.Model
     {
         [Key]
         public int DoktorID { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Ime { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Prezime { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         [ForeignKey(nameof(Specijalizacija))]
         public int SpecijalizacijaID { get; set; }
         public Specijalizacija Specijalizacija { get; set; }
-        [Required]
+        [EmailAddress(ErrorMessage = "Nevažeća email adresa")]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Telefon { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Adresa { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Grad { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Drzava { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string JMBG { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string KorisnickoIme { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string Titula { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string PocetakRadnogVremena { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string KrajRadnogVremena { get; set; }
         public virtual ICollection<Pacijent>? Pacijenti { get; set; }
         public string ImePrezime => $"{Ime} {Prezime}";

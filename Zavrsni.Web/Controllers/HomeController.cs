@@ -7,10 +7,11 @@ using System.Diagnostics;
 using Zavrsni.DAL;
 using Zavrsni.Model;
 using Zavrsni.Web.Models;
+using Zavrsni.Web.Util;
 
 namespace Zavrsni.Web.Controllers
 {
-    [Authorize(Policy = "RequireUserTypePacijent")]
+    
     public class HomeController(DataManagerDbContext _dbContext, UserManager<AppUser> _userManager) : Controller
     {
 
@@ -34,11 +35,16 @@ namespace Zavrsni.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [Authorize(Policy = "RequireUserTypePacijent")]
+        [Route("kreirajPregled")]
         public IActionResult KreirajPregled()
         {
-            ViewBag.Doktori = VratiDoktore();
+            var user = _userManager.GetUserAsync(User).Result;
+            ViewBag.Doktori = VratiDoktore((int)user.PacijentID);
             return View();
         }
+        [Authorize(Policy = "RequireUserTypePacijent")]
+        [Route("kreirajPregled")]
         [HttpPost]
         public async Task<IActionResult> KreirajPregled(KreirajPregledModel model)
         {
@@ -49,24 +55,27 @@ namespace Zavrsni.Web.Controllers
                 PacijentID = model.Pregled.PacijentID,
                 DoktorID = model.Pregled.DoktorID,
                 Potvrdeno = false,
-                UrlVideopoziva = ""
+                UrlVideopoziva = "",
+                BiljeskeDoktora = ""
             };
-            ViewBag.Doktori = VratiDoktore();
             var user = await _userManager.GetUserAsync(User);
+            ViewBag.Doktori = VratiDoktore((int)user.PacijentID);
             pregled.Doktor = _dbContext.Doktori.AsQueryable().Where(c => c.DoktorID == pregled.DoktorID).FirstOrDefault();
             pregled.Pacijent = _dbContext.Pacijenti.AsQueryable().Where(c => c.PacijentID== user.PacijentID).FirstOrDefault();
             ModelState.Remove("Pregled.Doktor");
             ModelState.Remove("Pregled.Pacijent");
+            ModelState.Remove("Pregled.UrlVideopoziva");
+            ModelState.Remove("Pregled.BiljeskeDoktora");
             if (ModelState.IsValid)
             {
                 _dbContext.Pregledi.Add(pregled);
                 _dbContext.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return Redirect("/mojiPregledi");
             }
 
             return View(model);
         }
-
+        [Authorize(Policy = "RequireUserTypePacijent")]
         [Route("mojiPregledi")]
         [ActionName("MojiPregledi")]
         public async Task<IActionResult> MojiPreglediAsync()
@@ -76,19 +85,81 @@ namespace Zavrsni.Web.Controllers
             return View(pregledi);
         }
 
-
+        [Authorize(Policy = "RequireUserTypePacijent")]
         [Route("pregledDetalji/{id}")]
         public IActionResult DetaljiOPregledu(int id)
         {
             var pregled = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).FirstOrDefault(p => p.PregledID == id);
             return View(pregled);
         }
-
-
-
-        public List<SelectListItem> VratiDoktore()
+        [Authorize(Policy = "RequireUserTypePacijent")]
+        [Route("listaDoktora")]
+        public IActionResult OdabirDoktora()
         {
             var doktori = _dbContext.Doktori.ToList();
+            return View(doktori);
+        }
+        [Authorize(Policy = "RequireUserTypePacijent")]
+        [Route("doktorDetalji/{id}")]
+        public IActionResult AboutDoktor(int id)
+        {
+            var doktor = _dbContext.Doktori.Include(p => p.Specijalizacija).FirstOrDefault(p => p.DoktorID == id);
+            return View(doktor);
+        }
+
+        [Authorize(Policy = "RequireUserTypePacijent")]
+        public IActionResult DodajDoktora(int id)
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+            Pacijent pacijent = _dbContext.Pacijenti.Include(p => p.Doktori).FirstOrDefault(p => p.PacijentID == user.PacijentID);
+            List<Doktor> doktori = pacijent.Doktori.ToList();
+            doktori.Add(_dbContext.Doktori.FirstOrDefault(p => p.DoktorID == id));
+            pacijent.Doktori = doktori;
+            _dbContext.Update(pacijent);
+            Doktor doktor = _dbContext.Doktori.Include(p => p.Pacijenti).Include(p => p.Specijalizacija).FirstOrDefault(p => p.DoktorID == id);
+            doktor.Pacijenti.Add(pacijent);
+            _dbContext.Update(doktor);
+            _dbContext.SaveChanges();
+            return Redirect("/listaDoktora");
+
+        }
+
+        [Authorize(Policy = "RequireUserTypePacijent")]
+        public async Task<IActionResult> OtkaziPregledAsync(OtkaziPregledModel model)
+        {
+            var pregled = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).FirstOrDefault(p => p.PregledID == model.PregledID);
+
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader("MailTemplate/EmailZaDoktoraOtkazivanje.html"))
+            {
+                body = reader.ReadToEnd();
+            }
+            body = body.Replace("{UserName}", pregled.Doktor.ImePrezime);
+            body = body.Replace("{PacijentName}", pregled.Pacijent.ImePrezime);
+            body = body.Replace("{DatumPregleda}", pregled.DatumIVrijemePregleda.ToString("d.M.yyyy"));
+            body = body.Replace("{VrijemePregleda}", pregled.DatumIVrijemePregleda.ToString("HH:mm"));
+            EmailConfirmation emailConfirmation = new EmailConfirmation();
+            await emailConfirmation.SendEmail(pregled.Doktor.Email, "Obavijest o otkazivanju pregleda", body);
+
+
+            _dbContext.Pregledi.Remove(pregled);
+            _dbContext.SaveChanges();
+            return Redirect("/mojiPregledi");
+        }
+
+        [Route("confirmEmail")]
+        public IActionResult ConfirmEmail()
+        {
+           return View("ConfirmEmail");
+        }
+
+
+
+        public List<SelectListItem> VratiDoktore(int pacijentID)
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+            var pacijent = _dbContext.Pacijenti.Include(p => p.Doktori).ThenInclude(p => p.Specijalizacija).FirstOrDefault(p => p.PacijentID == user.PacijentID);
+            var doktori = pacijent.Doktori.ToList();
             var selectList = new List<SelectListItem>
             {
                 new SelectListItem("", "")

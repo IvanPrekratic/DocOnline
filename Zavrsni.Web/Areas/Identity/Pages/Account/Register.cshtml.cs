@@ -83,8 +83,8 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
+            [EmailAddress(ErrorMessage = "Nevažeća email adresa")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
@@ -92,10 +92,10 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
+            [StringLength(100, ErrorMessage = "Lozinka mora biti između {2} i {1} znakova.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Lozinka")]
             public string Password { get; set; }
 
             /// <summary>
@@ -103,27 +103,27 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Potvrdi lozinku")]
+            [Compare("Password", ErrorMessage = "Upisane lozinke nisu jednake.")]
             public string ConfirmPassword { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Ime { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Prezime { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Telefon { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Adresa { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Grad { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string Drzava { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string JMBG { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public string KorisnickoIme { get; set; }
-            [Required]
+            [Required(ErrorMessage = "Polje ne smije biti prazno")]
             public DateTime DatumRodjenja { get; set; }
         }
 
@@ -193,8 +193,11 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
                     EmailConfirmation emailConfirmation = new EmailConfirmation();
                     await emailConfirmation.SendEmail(user.Email, "Confirm your account", body);
 
+                    return Redirect("/confirmEmail");
+                    /*
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
+                        
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
@@ -202,6 +205,7 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
+                    */
                 }
                 _dbContext.Pacijenti.Remove(_dbContext.Pacijenti.Where(pacijent => pacijent.KorisnickoIme == Input.KorisnickoIme).FirstOrDefault());
                 _dbContext.SaveChanges();

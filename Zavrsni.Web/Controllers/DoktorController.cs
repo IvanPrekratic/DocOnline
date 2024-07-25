@@ -47,7 +47,7 @@ namespace Zavrsni.Web.Controllers
             _dailyCoService = dailyCoService;
         }
 
-
+        [Route("pregledi")]
         [ActionName("NadolazeciPregledi")]
         public async Task<IActionResult> NadolazeciPreglediAsync()
         {
@@ -55,13 +55,14 @@ namespace Zavrsni.Web.Controllers
             var pregledi = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).Where(p => p.DoktorID == doktor.DoktorID).ToList();
             return View(pregledi);
         }
-        
+        [Route("kreirajDoktora")]
         public IActionResult KreirajDoktora()
         {
             this.FillDropdownSpecijalizacije();
             return View();
         }
         [HttpPost]
+        [Route("kreirajDoktora")]
         public async Task<IActionResult> KreirajDoktoraAsync(DoktorKreiranje model)
         {
             Doktor doktor = new Doktor
@@ -91,7 +92,10 @@ namespace Zavrsni.Web.Controllers
             {
                 var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
                 var rc = new DoktorRegister(_userManager, _userStore, _signInManager, _logger, _emailSender, _dbContext, urlHelper);
-                await rc.KreirajNovogDoktora(doktor, model, returnUrl, Request.Scheme);
+                var success = await rc.KreirajNovogDoktora(doktor, model, returnUrl, Request.Scheme);
+
+                TempData["AlertMessage"] = "Doktor uspjesno kreiran";
+                this.FillDropdownSpecijalizacije();
 
                 //_dbContext.Doktori.Add(model);
                 //_dbContext.SaveChanges();
@@ -107,9 +111,11 @@ namespace Zavrsni.Web.Controllers
         public IActionResult DetaljiOPregleduDoktor(int id)
         {
             var pregled = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).FirstOrDefault(p => p.PregledID == id);
+
             return View(pregled);
         }
         [HttpPost]
+        [Route("potvrdaPregleda")]
         public async Task<IActionResult> PotvrdiPregled(Pregled model)
         {
             Pregled pregled = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).FirstOrDefault(p => p.PregledID == model.PregledID);
@@ -121,20 +127,86 @@ namespace Zavrsni.Web.Controllers
             var roomName = sqids.Encode(pregled.PregledID);
             var dailycoUrl = await _dailyCoService.CreateRoomAsync(roomName, pregled.DatumIVrijemePregleda);
             pregled.UrlVideopoziva = roomName;
+
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader("MailTemplate/EmailZaPacijentaPotvrda.html"))
+            {
+                body = reader.ReadToEnd();
+            }
+            body = body.Replace("{UserName}", pregled.Pacijent.ImePrezime);
+            body = body.Replace("{DoktorName}", pregled.Doktor.ImePrezime);
+            body = body.Replace("{DatumPregleda}", pregled.DatumIVrijemePregleda.ToString("d.M.yyyy"));
+            body = body.Replace("{VrijemePregleda}", pregled.DatumIVrijemePregleda.ToString("HH:mm"));
+            EmailConfirmation emailConfirmation = new EmailConfirmation();
+            await emailConfirmation.SendEmail(pregled.Pacijent.Email, "Obavijest o potvrđenom pregledu", body);
+
+
             _dbContext.Pregledi.Update(pregled);
             _dbContext.SaveChanges();
             return Redirect("/pregledByID/" + model.PregledID);
         }
-        
+
+        [Route("videopoziv/{id}")]
         public IActionResult Videopoziv(string id)
         {
-            var redir= "https://doc-online.daily.co/" + id;
+            var redir = "https://doc-online.daily.co/" + id;
             ViewBag.Url = "https://doc-online.daily.co/" + id;
             //redirect to link in new tab
-            
+
             return View("VideopozivView", id);
         }
+        [HttpPost]
+        public IActionResult DodajBiljesku(Pregled model)
+        {
+            Pregled pregled = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).FirstOrDefault(p => p.PregledID == model.PregledID);
+            pregled.BiljeskeDoktora = model.BiljeskeDoktora;
+            _dbContext.Pregledi.Update(pregled);
+            _dbContext.SaveChanges();
+            return Redirect("/pregledByID/" + model.PregledID);
+        }
 
+        [HttpPost]
+        public IActionResult UrediBiljesku(Pregled model)
+        {
+            Pregled pregled = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).FirstOrDefault(p => p.PregledID == model.PregledID);
+            pregled.BiljeskeDoktora = model.BiljeskeDoktora;
+            _dbContext.Pregledi.Update(pregled);
+            _dbContext.SaveChanges();
+            return Redirect("/pregledByID/" + model.PregledID);
+        }
+        [HttpPost]
+        public async Task<IActionResult> PosaljiEmailAsync(DoktorEmailModel model)
+        {
+            var pacijent = _dbContext.Pacijenti.FirstOrDefault(p => p.PacijentID == model.PacijentID);
+            var doktor = _dbContext.Doktori.FirstOrDefault(p => p.DoktorID == model.DoktorID);
+            var pregled = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).FirstOrDefault(p => p.PregledID == model.PregledID);
+
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader("MailTemplate/EmailMessageTemplate.html"))
+            {
+                body = reader.ReadToEnd();
+            }
+            body = body.Replace("{PregledDatum}", pregled.DatumIVrijemePregleda.ToString());
+            body = body.Replace("{UserName}", pacijent.ImePrezime);
+            body = body.Replace("{Poruka}", model.EmailPoruka);
+            EmailConfirmation emailConfirmation = new EmailConfirmation();
+            await emailConfirmation.SendEmail(pacijent.Email, "Nova poruka od doktora", body);
+            return Redirect("/pregledByID/" + model.PregledID);
+        }
+        [Route("popisPacijenata")]
+        public IActionResult PopisPacijenata()
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+            var doktor = _dbContext.Doktori.Include(p => p.Pacijenti).FirstOrDefault(p => p.DoktorID == user.DoktorID);
+            return View(doktor.Pacijenti.ToList());
+        }
+        [Route("pacijent/{id}")]
+        public IActionResult AboutPacijent(int id)
+        {
+            ViewBag.PacijentPregledi = _dbContext.Pregledi.Include(p => p.Doktor).Include(p => p.Pacijent).Where(p => p.PacijentID == id).ToList();
+            var pacijent = _dbContext.Pacijenti.FirstOrDefault(p => p.PacijentID == id);
+            return View(pacijent);
+        }
 
 
 

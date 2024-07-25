@@ -1,0 +1,75 @@
+﻿@using Zavrsni.Model
+@model Doktor
+@{
+    ViewBag.Title = "Detalji o doktoru";
+}
+<h2>Detalji o pregledu</h2>
+<hr />
+@if (Model != null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Ime i prezime doktora
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ImePrezime)
+                    </dd>
+                    <dt>
+                        Email doktora
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+                    <dt>
+                        Kontakt broj
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Telefon)
+                    </dd>
+                    <dt>
+                        Adresa doktora
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Adresa), @Html.DisplayFor(model => model.Grad)
+                    </dd>
+                </dl>
+
+            </div>
+            <div class="col-8">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Specijalizacija doktora
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Specijalizacija.Naziv)
+                    </dd>
+                    <dt>
+                        Titula doktora
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Titula)
+                    </dd>
+                    <dt>
+                        Radno vrijeme doktora
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PocetakRadnogVremena) - @Html.DisplayFor(model => model.KrajRadnogVremena)) 
+                    </dd>
+                </dl>
+                <a asp-controller="Home" asp-action="DodajDoktora" asp-route-id="@Model.DoktorID" class="btn btn-info">Odaberi doktora</a>
+            </div>
+        </div>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-danger">
+        Nije odabran ispravni ID recenzije.
+    </div>
+
+}

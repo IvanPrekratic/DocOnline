@@ -3,10 +3,17 @@
 
 @{
     ViewData["Title"] = "Kreiranje doktora";
+    var message = TempData["AlertMessage"] ?? string.Empty;
 }
 
+<script type="text/javascript">
+    var message = '@message';
+    if(message)
+        alert(message);
+</script>
 
-<div class="row">
+
+<div class="row" style="padding-bottom: 60px">
     <div class="col-md-4">
         <form asp-action="KreirajDoktora" asp-route-returnUrl="@ViewBag.ReturnUrl">
             <div class="form-group">
@@ -30,12 +37,12 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="KorisnickoIme" class="control-label"></label>
+                <label asp-for="KorisnickoIme" class="control-label">Korisničko ime</label>
                 <input asp-for="KorisnickoIme" class="form-control" />
                 <span asp-validation-for="KorisnickoIme" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="JMBG" class="control-label"></label>
+                <label asp-for="JMBG" class="control-label">JMBG</label>
                 <input asp-for="JMBG" class="form-control" />
                 <span asp-validation-for="JMBG" class="text-danger"></span>
             </div>
@@ -65,7 +72,7 @@
                 <span asp-validation-for="Titula" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">Poćetak radnog vremena</label>
+                <label class="control-label">Početak radnog vremena</label>
                 <input asp-for="PocetakRadnogVremena" class="form-control" />
                 <span asp-validation-for="PocetakRadnogVremena" class="text-danger"></span>
             </div>
