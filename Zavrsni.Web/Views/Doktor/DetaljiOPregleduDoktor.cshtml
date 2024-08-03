@@ -77,6 +77,10 @@
                             <input type="submit" value="Potvrdi" class="btn btn-success" />
                         </form>
                     }
+                    <form asp-action="OtkaziPregled" method="post">
+                        <input type="hidden" name="PregledID" value="@Model.PregledID" />
+                        <input type="submit" value="Otkaži pregled" class="btn btn-outline-danger" />
+                    </form>
                 </p>
                 @if (Model.Potvrdeno == true)
                 {
@@ -98,7 +102,7 @@
                     </div>
 
                 }
-                else if (Model.BiljeskeDoktora != null)
+                else if (Model.BiljeskeDoktora != "")
                 {
                     <h4>Bilješke doktora:</h4>
                     <p style="font-size: 20px" id="pbiljeska">

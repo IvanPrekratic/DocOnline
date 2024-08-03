@@ -1,28 +1,91 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@section css {
+    <link rel="stylesheet" href="~/css/index.css" />
+}
+<div id="carouselExampleDark" class="carousel carousel-dark slide">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="10000">
+            <img class="first-slide"
+                 src="/img/doc-appointment.jpg" alt="First slide" style="object-fit: cover;object-position: 50% top;">
+            <div class="container">
+                <div class="carousel-caption text-left" style="background-color: rgba(0, 0, 0, 0.5); color: white; margin-bottom: 15px; border-radius: 7px;">
+                    <h2>Izbjegnite gužve kod doktora.</h2>
+                    <p>Uz Doc Online nećete čekati u redu kod vašeg doktora. Dogovorite pregled i obavite ga iz udobnosti Vašeg doma.</p>
+                    <p style="margin-bottom: 5px;"><a class="btn btn-lg btn-primary" asp-area="Identity" asp-page="/Account/Register" role="button">Započnite odmah</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item" data-bs-interval="10000">
+            <img class="second-slide"
+                 src="/img/aboutus.jpg" alt="Second slide" style="object-fit: cover;object-position: 50% top;">
+            <div class="container">
+                <div class="carousel-caption text-left" style="background-color: rgba(0, 0, 0, 0.5); color: white; margin-bottom: 15px; border-radius: 7px;">
+                    
+                    <p>Klikom na gumb pročitajte o nama i našoj viziji.</p>
+                    <p style="margin-bottom: 5px;"><a class="btn btn-lg btn-primary" href="/o-nama" role="button">Pročitaj</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item" data-bs-interval="10000">
+            <img class="third-slide"
+                 src="/img/privacy.jpg" alt="Third slide" style="object-fit: cover;object-position: 50% 30%;">
+            <div class="container">
+                <div class="carousel-caption text-left" style="background-color: rgba(0, 0, 0, 0.5); color: white; margin-bottom: 15px; border-radius: 7px;">
 
-<section class="hero">
-    <div class="container">
-        <h1>Welcome to HealthCareApp</h1>
-        <p>Your health, our priority. Book appointments and consult with doctors online.</p>
-        <a href="/signup" class="btn">Get Started</a>
-    </div>
-</section>
-<section class="features">
-    <div class="container">
-        <h2>Our Features</h2>
-        <div class="feature-item">
-            <h3>Video Consultations</h3>
-            <p>Connect with doctors via secure video calls.</p>
-        </div>
-        <div class="feature-item">
-            <h3>Easy Appointments</h3>
-            <p>Book and manage your appointments effortlessly.</p>
-        </div>
-        <div class="feature-item">
-            <h3>Medical History</h3>
-            <p>Access your medical records anytime, anywhere.</p>
+                    <p>Pročitajte našu politiku o privatnosti.</p>
+                    <p style="margin-bottom: 5px;"><a class="btn btn-lg btn-primary" href="/privacy" role="button">Pročitaj</a></p>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+<div class="container marketing" style="margin-bottom: 20px">
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row">
+        <div class="col-lg-4">
+            <img class="rounded-circle"
+                 src="/img/register.jpg"
+                 alt="Generic placeholder image" width="140" height="140">
+            <h2>Registrirajte se</h2>
+            <p>
+                Kako bi koristili usluge Online Doc-a morate napraviti svoj račun čije se kreiranje potvrđuje putem emaila.
+            </p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+            <img class="rounded-circle"
+                 src="/img/doktor.jpg"
+                 alt="Generic placeholder image" width="140" height="140">
+            <h2>Odaberite doktora</h2>
+            <p>
+                Nakon uspješno napravljenog računa odabirete željene doktore željenih specijalizacija.
+            </p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+            <img class="rounded-circle"
+                 src="/img/pregled.jpg"
+                 alt="Generic placeholder image" width="140" height="140">
+            <h2>Dogovorite pregled</h2>
+            <p>
+                Kad izvršite prethodna dva koraka možete zatražiti pregled kod odabranih doktora.
+            </p>
+        </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+    <!-- START THE FEATURETTES -->
+
+</div><!-- /.container -->

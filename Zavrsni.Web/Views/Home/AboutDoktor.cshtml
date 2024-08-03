@@ -2,6 +2,7 @@
 @model Doktor
 @{
     ViewBag.Title = "Detalji o doktoru";
+    var UpisanKodDoktora = ViewBag.UpisanKodDoktora;
 }
 <h2>Detalji o pregledu</h2>
 <hr />
@@ -59,7 +60,17 @@
                         @Html.DisplayFor(model => model.PocetakRadnogVremena) - @Html.DisplayFor(model => model.KrajRadnogVremena)) 
                     </dd>
                 </dl>
-                <a asp-controller="Home" asp-action="DodajDoktora" asp-route-id="@Model.DoktorID" class="btn btn-info">Odaberi doktora</a>
+                @{
+                    if (UpisanKodDoktora)
+                    {
+                        <p class="text-success">Upisani ste kod ovog doktora</p>
+                    }
+                    else
+                    {
+                        <a asp-controller="Home" asp-action="DodajDoktora" asp-route-id="@Model.DoktorID" class="btn btn-info">Odaberi doktora</a>
+                    }
+                }
+                
             </div>
         </div>
 
@@ -69,7 +80,7 @@
 else
 {
     <div class="alert alert-danger">
-        Nije odabran ispravni ID recenzije.
+        Nije odabran ispravni ID doktora.
     </div>
 
 }

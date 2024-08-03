@@ -1,0 +1,32 @@
+﻿@using Zavrsni.Model
+@model List<Doktor>
+@{
+    ViewBag.Title = "Moji doktori";
+}
+
+
+<table style="margin-top: 20px;" class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Ime i prezime</th>
+            <th>Email</th>
+            <th>Telefon</th>
+            <th>Grad</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doktor in Model)
+        {
+            <tr>
+                <td>@doktor.ImePrezime</td>
+                <td>@doktor.Email</td>
+                <td>@doktor.Telefon</td>
+                <td>@doktor.Grad</td>
+                <td>
+                    <a asp-controller="Home" asp-action="AboutDoktor" asp-route-id="@doktor.DoktorID">Detalji</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

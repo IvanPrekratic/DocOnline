@@ -19,7 +19,7 @@ namespace Zavrsni.Web.Controllers
         {
             return View();
         }
-
+        [Route("privacy")]
         public IActionResult Privacy()
         {
             return View();
@@ -97,13 +97,24 @@ namespace Zavrsni.Web.Controllers
         public IActionResult OdabirDoktora()
         {
             var doktori = _dbContext.Doktori.ToList();
+            var pacijent = _dbContext.Pacijenti.Include(p => p.Doktori).FirstOrDefault(p => p.PacijentID == _userManager.GetUserAsync(User).Result.PacijentID);
+            ViewBag.Pacijent = pacijent;
             return View(doktori);
         }
         [Authorize(Policy = "RequireUserTypePacijent")]
         [Route("doktorDetalji/{id}")]
         public IActionResult AboutDoktor(int id)
         {
-            var doktor = _dbContext.Doktori.Include(p => p.Specijalizacija).FirstOrDefault(p => p.DoktorID == id);
+            var doktor = _dbContext.Doktori.Include(p => p.Specijalizacija).Include(p => p.Pacijenti).FirstOrDefault(p => p.DoktorID == id);
+            Pacijent pacijent = _dbContext.Pacijenti.Include(p => p.Doktori).FirstOrDefault(p => p.PacijentID == _userManager.GetUserAsync(User).Result.PacijentID);
+            if (pacijent.Doktori.Contains(doktor))
+            {
+                ViewBag.UpisanKodDoktora = true;
+            }
+            else
+            {
+                ViewBag.UpisanKodDoktora = false;
+            }
             return View(doktor);
         }
 
@@ -112,11 +123,16 @@ namespace Zavrsni.Web.Controllers
         {
             var user = _userManager.GetUserAsync(User).Result;
             Pacijent pacijent = _dbContext.Pacijenti.Include(p => p.Doktori).FirstOrDefault(p => p.PacijentID == user.PacijentID);
-            List<Doktor> doktori = pacijent.Doktori.ToList();
-            doktori.Add(_dbContext.Doktori.FirstOrDefault(p => p.DoktorID == id));
-            pacijent.Doktori = doktori;
-            _dbContext.Update(pacijent);
+            List<Doktor> doktoriPacijenta = pacijent.Doktori.ToList();
             Doktor doktor = _dbContext.Doktori.Include(p => p.Pacijenti).Include(p => p.Specijalizacija).FirstOrDefault(p => p.DoktorID == id);
+            if(pacijent.Doktori.Contains(doktor))
+            {
+                return Redirect("/listaDoktora");
+            }
+            doktoriPacijenta.Add(_dbContext.Doktori.FirstOrDefault(p => p.DoktorID == id));
+            pacijent.Doktori = doktoriPacijenta;
+            _dbContext.Update(pacijent);
+            
             doktor.Pacijenti.Add(pacijent);
             _dbContext.Update(doktor);
             _dbContext.SaveChanges();
@@ -151,6 +167,14 @@ namespace Zavrsni.Web.Controllers
         public IActionResult ConfirmEmail()
         {
            return View("ConfirmEmail");
+        }
+
+        [Route("mojiDoktori")]
+        public IActionResult MojiDoktori()
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+            var pacijent = _dbContext.Pacijenti.Include(p => p.Doktori).FirstOrDefault(p => p.PacijentID== user.PacijentID);
+            return View(pacijent.Doktori.ToList());
         }
 
 

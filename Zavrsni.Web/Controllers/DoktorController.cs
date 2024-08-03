@@ -207,7 +207,28 @@ namespace Zavrsni.Web.Controllers
             var pacijent = _dbContext.Pacijenti.FirstOrDefault(p => p.PacijentID == id);
             return View(pacijent);
         }
+        [ActionName("OtkaziPregled")]
+        public async Task<IActionResult> OtkaziPregledAsync(OtkaziPregledModel model)
+        {
+            var pregled = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).FirstOrDefault(p => p.PregledID == model.PregledID);
 
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader("MailTemplate/EmailZaPacijentaOtkazivanje.html"))
+            {
+                body = reader.ReadToEnd();
+            }
+            body = body.Replace("{UserName}", pregled.Pacijent.ImePrezime);
+            body = body.Replace("{DoktorName}", pregled.Doktor.ImePrezime);
+            body = body.Replace("{DatumPregleda}", pregled.DatumIVrijemePregleda.ToString("d.M.yyyy"));
+            body = body.Replace("{VrijemePregleda}", pregled.DatumIVrijemePregleda.ToString("HH:mm"));
+            EmailConfirmation emailConfirmation = new EmailConfirmation();
+            await emailConfirmation.SendEmail(pregled.Pacijent.Email, "Obavijest o otkazivanju pregleda", body);
+
+
+            _dbContext.Pregledi.Remove(pregled);
+            _dbContext.SaveChanges();
+            return Redirect("/pregledi");
+        }
 
 
 

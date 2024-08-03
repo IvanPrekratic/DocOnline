@@ -2,6 +2,7 @@
 @model List<Doktor>
 @{
     ViewBag.Title = "Odabir doktora";
+    Pacijent pacijent = ViewBag.Pacijent;
 }
 
 <h2>Odaberi željenog doktora</h2>
@@ -27,9 +28,22 @@
                 <td>@doktor.Email</td>
                 <td>@doktor.Telefon</td>
                 <td>@doktor.Grad</td>
-                <td>
-                    <a asp-controller="Home" asp-action="DodajDoktora" asp-route-id="@doktor.DoktorID">Odaberi doktora</a>
-                </td>
+
+                @{
+                    if (pacijent.Doktori.Contains(doktor))
+                    {
+                        <td class="text-success">Upisan</td>
+                    }
+                    else
+                    {
+                        <td>
+                            <a asp-controller="Home" asp-action="DodajDoktora" asp-route-id="@doktor.DoktorID">Odaberi doktora</a>
+                        </td>
+
+                    }
+                }
+
+
             </tr>
         }
     </tbody>
