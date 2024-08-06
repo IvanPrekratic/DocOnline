@@ -5,6 +5,7 @@
 
 # User-specific files
 appsettings.json
+migracije.txt
 *.rsuser
 *.suo
 *.user
