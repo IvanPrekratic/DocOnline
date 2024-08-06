@@ -300,7 +300,7 @@ namespace Zavrsni.Web.Areas.Identity.Pages.Account
 		}
         */
 
-		private AppUser CreateUser()
+        private AppUser CreateUser()
         {
             try
             {

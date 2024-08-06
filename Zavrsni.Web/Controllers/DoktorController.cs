@@ -193,6 +193,7 @@ namespace Zavrsni.Web.Controllers
             await emailConfirmation.SendEmail(pacijent.Email, "Nova poruka od doktora", body);
             return Redirect("/pregledByID/" + model.PregledID);
         }
+
         [Route("popisPacijenata")]
         public IActionResult PopisPacijenata()
         {
@@ -200,6 +201,7 @@ namespace Zavrsni.Web.Controllers
             var doktor = _dbContext.Doktori.Include(p => p.Pacijenti).FirstOrDefault(p => p.DoktorID == user.DoktorID);
             return View(doktor.Pacijenti.ToList());
         }
+
         [Route("pacijent/{id}")]
         public IActionResult AboutPacijent(int id)
         {
