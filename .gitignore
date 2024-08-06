@@ -363,3 +363,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Zavrsni.Web/appsettings.json
+/Zavrsni.DAL/migracije.txt
