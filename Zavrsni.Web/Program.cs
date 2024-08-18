@@ -19,6 +19,11 @@ builder.Services.AddSingleton(sp => new DailyCoService( sp.GetRequiredService<Ht
 builder.Services.AddScoped<IAuthorizationHandler, UserTypeHandler>();
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("RequireAdministrator", policy =>
+        policy.Requirements.Add(new UserTypeRequirement(UserType.Administrator)));
+});
+builder.Services.AddAuthorization(options =>
+{
     options.AddPolicy("RequireUserTypeDoktor", policy =>
         policy.Requirements.Add(new UserTypeRequirement(UserType.Doktor)));
 });

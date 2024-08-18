@@ -23,6 +23,7 @@ namespace Zavrsni.Model
     public enum UserType
     {
         Doktor,
-        Pacijent
+        Pacijent,
+        Administrator
     }
 }

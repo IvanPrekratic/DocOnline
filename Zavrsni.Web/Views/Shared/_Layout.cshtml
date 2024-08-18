@@ -64,9 +64,6 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="PopisPacijenata">Moji pacijenti</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="KreirajDoktora">Kreiranje novog doktora</a>
-                                </li>
                             </ul>
                         }
                         else if (user.UserType == UserType.Pacijent)
@@ -89,6 +86,26 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="MojiDoktori">Moji doktori</a>
+                                </li>
+                            </ul>
+                        }
+                        else if (user.UserType == UserType.Administrator)
+                        {
+                            <ul class="navbar-nav flex-grow-1">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="/o-nama">O nama</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Pravila privatnosti</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="KreirajDoktora">Kreiranje novog doktora</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AdministriranjeDoktora">Administriranje doktora</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AdministriranjePacijenta">Administriranje pacijenta</a>
                                 </li>
                             </ul>
                         }

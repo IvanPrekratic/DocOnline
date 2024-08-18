@@ -1,0 +1,67 @@
+﻿@using Zavrsni.Model
+@model Pacijent
+@{
+    ViewBag.Title = "Detalji o pacijentu";
+}
+<h2>Detalji o pacijentu</h2>
+<hr />
+@if (Model != null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Ime i prezime pacijenta
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ImePrezime)
+                    </dd>
+                    <dt>
+                        Email pacijenta
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+                    <dt>
+                        Kontakt broj
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Telefon)
+                    </dd>
+                    <dt>
+                        Adresa pacijenta
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Adresa), @Html.DisplayFor(model => model.Grad)
+                    </dd>
+                </dl>
+
+            </div>
+            <div class="col-8">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Korisničko ime pacijenta
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.KorisnickoIme)
+                    </dd>
+                    
+                </dl>
+                <!-- Button with action-->
+
+                <a asp-action="ObrisiPacijenta" asp-controller="Admin" asp-route-id="@Model.PacijentID" class="btn btn-outline-primary">Obriši pacijenta</a>
+
+            </div>
+        </div>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-danger">
+        Nije odabran ispravni ID doktora.
+    </div>
+
+}

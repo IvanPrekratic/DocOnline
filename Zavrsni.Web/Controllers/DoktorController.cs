@@ -55,58 +55,6 @@ namespace Zavrsni.Web.Controllers
             var pregledi = _dbContext.Pregledi.Include(p => p.Pacijent).Include(p => p.Doktor).Where(p => p.DoktorID == doktor.DoktorID).ToList();
             return View(pregledi);
         }
-        [Route("kreirajDoktora")]
-        public IActionResult KreirajDoktora()
-        {
-            this.FillDropdownSpecijalizacije();
-            return View();
-        }
-        [HttpPost]
-        [Route("kreirajDoktora")]
-        public async Task<IActionResult> KreirajDoktoraAsync(DoktorKreiranje model)
-        {
-            Doktor doktor = new Doktor
-            {
-                Ime = model.Ime,
-                Prezime = model.Prezime,
-                SpecijalizacijaID = model.SpecijalizacijaID,
-                Email = model.Email,
-                Telefon = model.Telefon,
-                Adresa = model.Adresa,
-                Grad = model.Grad,
-                Drzava = model.Drzava,
-                JMBG = model.JMBG,
-                KorisnickoIme = model.KorisnickoIme,
-                Titula = model.Titula,
-                PocetakRadnogVremena = model.PocetakRadnogVremena,
-                KrajRadnogVremena = model.KrajRadnogVremena
-            };
-
-            var pacijentList = new List<Pacijent>();
-            doktor.Pacijenti = pacijentList;
-            ModelState.Remove("Specijalizacija");
-            doktor.Specijalizacija = _dbContext.Specijalizacije.Find(model.SpecijalizacijaID);
-            var returnUrl = Url.Content("~/");
-
-            if (ModelState.IsValid)
-            {
-                var urlHelper = _urlHelperFactory.GetUrlHelper(ControllerContext);
-                var rc = new DoktorRegister(_userManager, _userStore, _signInManager, _logger, _emailSender, _dbContext, urlHelper);
-                var success = await rc.KreirajNovogDoktora(doktor, model, returnUrl, Request.Scheme);
-
-                TempData["AlertMessage"] = "Doktor uspjesno kreiran";
-                this.FillDropdownSpecijalizacije();
-
-                //_dbContext.Doktori.Add(model);
-                //_dbContext.SaveChanges();
-                return View();
-            }
-            else
-            {
-                this.FillDropdownSpecijalizacije();
-                return View();
-            }
-        }
         [Route("pregledByID/{id}")]
         public IActionResult DetaljiOPregleduDoktor(int id)
         {
