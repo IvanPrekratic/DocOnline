@@ -24,7 +24,7 @@
                     <td>
                         <a asp-controller="Doktor" asp-action="AboutPacijent" asp-route-id="@pregled.Pacijent.PacijentID">@pregled.Pacijent.ImePrezime</a>
                     </td>
-                    <td>@pregled.DatumIVrijemePregleda.ToString("d.M.yyyy HH:mm")</td>
+                    <td>@pregled.DatumIVrijemePregleda.ToString("dd.MM.yyyy HH:mm")</td>
                     <td>@pregled.Pacijent.Telefon</td>
                     @{
                         if (@pregled.Potvrdeno == true)

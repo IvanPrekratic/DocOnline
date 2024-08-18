@@ -8,96 +8,102 @@
 
 <script type="text/javascript">
     var message = '@message';
-    if(message)
+    if (message)
         alert(message);
 </script>
 
 
 <div class="row" style="padding-bottom: 60px">
-    <div class="col-md-4">
-        <form asp-action="KreirajDoktora" asp-route-returnUrl="@ViewBag.ReturnUrl">
-            <div class="form-group">
-                <label class="control-label">Ime</label>
-                <input asp-for="Ime" class="form-control" />
-                <span asp-validation-for="Ime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Prezime</label>
-                <input asp-for="Prezime" class="form-control" />
-                <span asp-validation-for="Prezime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Telefon</label>
-                <input asp-for="Telefon" class="form-control" />
-                <span asp-validation-for="Telefon" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="KorisnickoIme" class="control-label">Korisničko ime</label>
-                <input asp-for="KorisnickoIme" class="form-control" />
-                <span asp-validation-for="KorisnickoIme" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JMBG" class="control-label">JMBG</label>
-                <input asp-for="JMBG" class="form-control" />
-                <span asp-validation-for="JMBG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Specijalizacija</label>
-                <select asp-for="SpecijalizacijaID" asp-items="ViewBag.Specijalizacije" class="form-control"></select>
-                <span asp-validation-for="SpecijalizacijaID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Adresa</label>
-                <input asp-for="Adresa" class="form-control" />
-                <span asp-validation-for="Adresa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Grad</label>
-                <input asp-for="Grad" class="form-control" />
-                <span asp-validation-for="Grad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Država</label>
-                <input asp-for="Drzava" class="form-control" />
-                <span asp-validation-for="Drzava" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Titula</label>
-                <input asp-for="Titula" class="form-control" />
-                <span asp-validation-for="Titula" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Početak radnog vremena</label>
-                <input asp-for="PocetakRadnogVremena" class="form-control" />
-                <span asp-validation-for="PocetakRadnogVremena" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Kraj radnog vremena</label>
-                <input asp-for="KrajRadnogVremena" class="form-control" />
-                <span asp-validation-for="KrajRadnogVremena" class="text-danger"></span>
+    <form asp-action="KreirajDoktora" asp-route-returnUrl="@ViewBag.ReturnUrl">
+        <div style="margin: 0 auto; width: 80%; display:flex; flex-direction:row; justify-content:space-between;">
+            <div style="width: 40%; ">
+                <div class="form-group">
+                    <label class="control-label">Ime</label>
+                    <input asp-for="Ime" class="form-control" />
+                    <span asp-validation-for="Ime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Prezime</label>
+                    <input asp-for="Prezime" class="form-control" />
+                    <span asp-validation-for="Prezime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Telefon</label>
+                    <input asp-for="Telefon" class="form-control" />
+                    <span asp-validation-for="Telefon" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="KorisnickoIme" class="control-label">Korisničko ime</label>
+                    <input asp-for="KorisnickoIme" class="form-control" />
+                    <span asp-validation-for="KorisnickoIme" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="JMBG" class="control-label">JMBG</label>
+                    <input asp-for="JMBG" class="form-control" />
+                    <span asp-validation-for="JMBG" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Specijalizacija</label>
+                    <select asp-for="SpecijalizacijaID" asp-items="ViewBag.Specijalizacije" class="form-control"></select>
+                    <span asp-validation-for="SpecijalizacijaID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Adresa</label>
+                    <input asp-for="Adresa" class="form-control" />
+                    <span asp-validation-for="Adresa" class="text-danger"></span>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label class="control-label">Lozinka</label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Potvrdi lozinku</label>
-                <input asp-for="PasswordConfirm" class="form-control" />
-                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
-            </div>
+            <div style="width: 40%; ">
+                <div class="form-group">
+                    <label class="control-label">Grad</label>
+                    <input asp-for="Grad" class="form-control" />
+                    <span asp-validation-for="Grad" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Država</label>
+                    <input asp-for="Drzava" class="form-control" />
+                    <span asp-validation-for="Drzava" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Titula</label>
+                    <input asp-for="Titula" class="form-control" />
+                    <span asp-validation-for="Titula" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Početak radnog vremena</label>
+                    <input asp-for="PocetakRadnogVremena" class="form-control" />
+                    <span asp-validation-for="PocetakRadnogVremena" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Kraj radnog vremena</label>
+                    <input asp-for="KrajRadnogVremena" class="form-control" />
+                    <span asp-validation-for="KrajRadnogVremena" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <input type="submit" value="Spremi" class="btn btn-outline-success" />
+                <div class="form-group">
+                    <label class="control-label">Lozinka</label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Potvrdi lozinku</label>
+                    <input asp-for="PasswordConfirm" class="form-control" />
+                    <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                </div>
+
+                <div class="form-group" style="margin-top: 25px;">
+                    <input type="submit" value="Spremi" class="btn btn-outline-success" />
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+
 </div>
 
 @section Scripts {

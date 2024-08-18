@@ -12,6 +12,7 @@
     <thead>
         <tr>
             <th>Ime i prezime</th>
+            <th>Specijalizacija</th>
             <th>Email</th>
             <th>Telefon</th>
             <th>Grad</th>
@@ -25,6 +26,7 @@
                 <td>
                     <a asp-controller="Home" asp-action="AboutDoktor" asp-route-id="@doktor.DoktorID">@doktor.ImePrezime</a>
                 </td>
+                <td>@doktor.Specijalizacija.Naziv</td>
                 <td>@doktor.Email</td>
                 <td>@doktor.Telefon</td>
                 <td>@doktor.Grad</td>

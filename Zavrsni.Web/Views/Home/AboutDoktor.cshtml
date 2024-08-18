@@ -4,7 +4,7 @@
     ViewBag.Title = "Detalji o doktoru";
     var UpisanKodDoktora = ViewBag.UpisanKodDoktora;
 }
-<h2>Detalji o pregledu</h2>
+<h2>Detalji o doktoru</h2>
 <hr />
 @if (Model != null)
 {
@@ -57,13 +57,14 @@
                         Radno vrijeme doktora
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.PocetakRadnogVremena) - @Html.DisplayFor(model => model.KrajRadnogVremena)) 
+                        @Html.DisplayFor(model => model.PocetakRadnogVremena) - @Html.DisplayFor(model => model.KrajRadnogVremena) 
                     </dd>
                 </dl>
                 @{
                     if (UpisanKodDoktora)
                     {
-                        <p class="text-success">Upisani ste kod ovog doktora</p>
+                        <p class="text-success">Upisani ste kod ovog doktora.</p>
+                        <a asp-controller="Home" asp-action="MakniDoktora" asp-route-id="@Model.DoktorID" class="btn btn-danger">Ispiši se</a>
                     }
                     else
                     {

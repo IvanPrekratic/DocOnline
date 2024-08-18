@@ -45,6 +45,7 @@ namespace Zavrsni.Web.Models
 
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Upisane lozinke nisu jednake.")]
+        [Required(ErrorMessage = "Polje ne smije biti prazno")]
         public string PasswordConfirm { get; set; }
     }
 }

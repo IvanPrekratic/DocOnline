@@ -21,7 +21,7 @@
                         Datum rođenja pacijenta
                     </dt>
                     <dd>
-                        @Model.DatumRodjenja.ToString("d.M.yyyy")
+                        @Model.DatumRodjenja.ToString("dd.MM.yyyy")
                     </dd>
                     <dt>
                         Email pacijenta
@@ -62,7 +62,7 @@
                             if(DateTime.Compare(pregled.DatumIVrijemePregleda, DateTime.Now) <= 0)
                             {
                                 <tr class="table-active">
-                                    <td>@pregled.DatumIVrijemePregleda.ToString("d.M.yyyy")</td>
+                                    <td>@pregled.DatumIVrijemePregleda.ToString("dd.MM.yyyy")</td>
                                     <td>@pregled.DatumIVrijemePregleda.ToString("HH:mm")</td>
                                     @{
                                         if (@pregled.Potvrdeno == true)
@@ -82,7 +82,7 @@
                             } else
                             {
                                 <tr>
-                                    <td>@pregled.DatumIVrijemePregleda.ToString("d.M.yyyy")</td>
+                                    <td>@pregled.DatumIVrijemePregleda.ToString("dd.MM.yyyy")</td>
                                     <td>@pregled.DatumIVrijemePregleda.ToString("HH:mm")</td>
                                     @{
                                         if (@pregled.Potvrdeno == true)
